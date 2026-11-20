@@ -43,44 +43,42 @@ Alur: `View` → `ViewModel` (ChangeNotifier) → `UseCase` → `Repository` →
 
 ## Tampilan Aplikasi
 
-### Desain UI (Figma)
+Tangkapan layar dari APK release di Android.
 
-Desain layar utama: Discover, Detail Film, Pencarian, dan Favorit.
-
-![Core screens](docs/design/core-screens.png)
-
-Desain state: pencarian kosong, loading, error jaringan, dan favorit kosong.
-
-![Functional states](docs/design/functional-states.png)
-
-Screenshot dari aplikasi yang berjalan akan ditambahkan di bagian ini.
+| Discover | Detail Film | Live Search | Favorit |
+| --- | --- | --- | --- |
+| ![Daftar film dari OMDb](docs/screenshots/discover.png) | ![Detail film Batman Begins](docs/screenshots/detail.png) | ![Hasil pencarian Interstellar](docs/screenshots/search.png) | ![Film yang tersimpan di favorit](docs/screenshots/saved.png) |
 
 ## Download APK
 
-Link download APK akan ditambahkan di bagian [Releases](https://github.com/rikoarik/movie-muse/releases) setelah build release selesai.
+[Unduh APK Android v1.0.0](https://github.com/rikoarik/movie-muse/releases/download/v1.0.0/Movie-Muse-v1.0.0.apk) · [GitHub Releases](https://github.com/rikoarik/movie-muse/releases)
+
+APK sudah dikonfigurasi untuk mengakses OMDb setelah diinstal.
 
 ## Cara Menjalankan
 
-1. Dapatkan API key di [omdbapi.com](https://www.omdbapi.com/).
-2. Install dependency:
+Diuji dengan Flutter 3.47.5, Dart 3.13.4, dan Android SDK 36.
+
+1. Aktifkan API key dari [OMDb](https://www.omdbapi.com/apikey.aspx). Salin konfigurasi contoh dan isi `OMDB_API_KEY` di file `.env`.
+   ```bash
+   cp .env.example .env
+   ```
+2. Instal dependensi dan jalankan aplikasi.
    ```bash
    flutter pub get
+   flutter run --dart-define-from-file=.env
    ```
-3. Jalankan aplikasi:
-   ```bash
-   flutter run --dart-define=OMDB_API_KEY=YOUR_KEY
-   ```
-4. Jalankan analisis dan test:
+3. Jalankan analisis dan tes.
    ```bash
    flutter analyze
    flutter test
    ```
-5. Build APK release:
+4. Buat APK release.
    ```bash
-   flutter build apk --release --dart-define=OMDB_API_KEY=YOUR_KEY
+   flutter build apk --release --dart-define-from-file=.env
    ```
 
-> API key tidak disimpan di repository. Lewat `--dart-define`, key masih bisa diekstrak dari APK, jadi jangan dianggap rahasia untuk produksi.
+Hasil build ada di `build/app/outputs/flutter-apk/app-release.apk`. File `.env` disimpan lokal. Gunakan key khusus distribusi karena key yang dipakai saat build dapat diekstrak dari APK.
 
 ## Dokumentasi
 

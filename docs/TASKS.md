@@ -19,7 +19,7 @@ Time blocks are **targets**, not a claim that anything has been implemented alre
 ## Milestone A — functional core (P0)
 
 - [ ] Create Flutter Android project and configure key via dart-define.
-- [ ] Add `http` and `shared_preferences` (and a font package only if necessary).
+- [ ] Add `dio` and `shared_preferences`.
 - [ ] Build models with missing/`N/A` normalization.
 - [ ] Implement API client: search by `s`, details by `i`, check `Response`.
 - [ ] Create Discover movie list with progress, empty, error, and poster fallbacks.
@@ -44,7 +44,7 @@ Time blocks are **targets**, not a claim that anything has been implemented alre
 - [ ] Verify poor network, `N/A` poster, no results, no favorites, relaunch.
 - [ ] Capture real screenshots from the built app (not reference image or mockup).
 - [ ] Update `README.md` with implemented features and screenshot links.
-- [ ] Build release: `flutter build apk --release --dart-define=OMDB_API_KEY=...`.
+- [ ] Build release with the local OMDb configuration described in the [README](../README.md).
 - [ ] Install APK and launch on Android device/emulator.
 - [ ] Push complete source to GitHub (exclude build output and real key).
 - [ ] Email APK and repository link to `iam@andazlan.com` as specified in the test.

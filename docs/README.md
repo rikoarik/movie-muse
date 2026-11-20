@@ -1,8 +1,6 @@
 # Movie Muse
 
-Flutter movie browser built for the **Android/iOS Developer coding test**. Uses the OMDb API, lightweight MVVM, live title search, detail screens, and favorites stored on-device. The UI follows a soft editorial cinema design inspired by the supplied peach/lavender reference.
-
-> **Project status:** Documentation/blueprint only. This folder does not claim the Flutter application or APK has been implemented yet. Replace this notice, the screenshot placeholders, and checklists with actual results before publishing.
+Movie Muse is a Flutter app for browsing and searching OMDb, viewing film details, and saving favorites on-device. The [project README](../README.md) has setup instructions, APK downloads, and app screenshots.
 
 ## Required features
 
@@ -14,29 +12,11 @@ Flutter movie browser built for the **Android/iOS Developer coding test**. Uses 
 
 ## Technical choices
 
-Flutter · Dart · OMDb HTTPS API · `http` · `shared_preferences` · `ChangeNotifier`.
-
-## Getting started (after Flutter project implementation)
-
-1. Install Flutter and Android SDK; verify `flutter doctor`.
-2. Obtain an OMDb API key at [omdbapi.com](https://www.omdbapi.com/).
-3. Install dependencies using `flutter pub get`.
-4. Start the app: `flutter run --dart-define=OMDB_API_KEY=YOUR_KEY`.
-5. Build APK: `flutter build apk --release --dart-define=OMDB_API_KEY=YOUR_KEY`.
-
-**Key caveat:** `dart-define` avoids committing the key but it remains recoverable in the APK; never treat it as a production secret.
-
-## Screenshots — add actual app captures
-
-| Discover | Detail | Search | Saved |
-|---|---|---|---|
-| TODO: `screenshots/discover.png` | TODO: `screenshots/detail.png` | TODO: `screenshots/search.png` | TODO: `screenshots/saved.png` |
-
-Do not commit example/reference imagery as if it were app screenshots.
+Flutter and Dart, Dio for OMDb requests, SharedPreferences for local favorites, Provider and ChangeNotifier for state, GetIt for dependency injection, and GoRouter for navigation.
 
 ## Architecture
 
-Flutter widgets → ViewModels (`ChangeNotifier`) → Movie/Favorites repositories → OMDb HTTPS / local SharedPreferences. See [ARCHITECTURE.md](ARCHITECTURE.md).
+Flutter widgets → ViewModels → use cases → repositories → data sources. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Documentation
 
@@ -50,4 +30,4 @@ Flutter widgets → ViewModels (`ChangeNotifier`) → Movie/Favorites repositori
 
 ## Required submission
 
-When implementation is complete: push the code and README with genuine screenshots to GitHub, verify the release APK, and email the APK + repository link to the address stated in the test document (`iam@andazlan.com`).
+The coding test requests the compiled APK and repository link by email to `iam@andazlan.com`.

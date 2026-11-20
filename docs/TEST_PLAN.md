@@ -43,11 +43,11 @@ Check screenshots against `DESIGN.md` on a typical 360–430 dp phone viewport. 
 flutter pub get
 flutter analyze
 flutter test
-flutter run --dart-define=OMDB_API_KEY=YOUR_KEY
-flutter build apk --release --dart-define=OMDB_API_KEY=YOUR_KEY
+flutter run --dart-define-from-file=.env
+flutter build apk --release --dart-define-from-file=.env
 ```
 
-Expected APK path in standard Flutter projects: `build/app/outputs/flutter-apk/app-release.apk`. Verify the path after the build and install/test the APK before sending.
+Set up the local `.env` using the [README](../README.md) before running or building. The APK is built to `build/app/outputs/flutter-apk/app-release.apk`.
 
 ## 5. Release acceptance
 

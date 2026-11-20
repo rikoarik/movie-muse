@@ -4,7 +4,7 @@
 
 ## 1. Configuration
 
-Use HTTPS `https://www.omdbapi.com/` and a valid personal API key. Configure via `String.fromEnvironment('OMDB_API_KEY')` and pass `--dart-define=OMDB_API_KEY=YOUR_KEY` to run/build. Never commit an actual key; `--dart-define` is not a production-grade secret vault.
+The app reads `OMDB_API_KEY` at build time and calls `https://www.omdbapi.com/`. For a local build, copy [`.env.example`](../.env.example) to `.env`, fill in an active key, and pass `--dart-define-from-file=.env`. The built APK contains the key it uses.
 
 | Action | Request | Notes |
 |---|---|---|

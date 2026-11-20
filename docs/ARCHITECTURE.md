@@ -1,60 +1,40 @@
 # ARCHITECTURE.md — Movie Muse
 
-> Lightweight MVVM architecture · Flutter · OMDb API · Local favorites
+> MVVM + Clean Architecture · Flutter · OMDb API · Local favorites
 
 ## 1. Design decisions
 
-The task is small and time-limited. Choose one feature-oriented Flutter application with **MVVM + repositories**. Do not add Clean Architecture layers, code generation, dependency-injection containers, offline movie caching or a backend solely for this test.
+Flutter views observe `ChangeNotifier` ViewModels through Provider. ViewModels invoke domain use cases, which depend on repository interfaces. GetIt wires repository implementations to Dio and SharedPreferences data sources.
 
 ```mermaid
 flowchart TD
-    UI[Flutter Screens and Widgets] --> VM[Movie & Favorite ViewModels]
-    VM --> MR[MovieRepository]
-    VM --> FR[FavoritesRepository]
-    MR --> OM[OMDb HTTPS API]
-    FR --> SP[SharedPreferences local JSON]
+    UI[Flutter screens and widgets] --> VM[ViewModels]
+    VM --> UC[Domain use cases]
+    UC --> MR[MovieRepository]
+    UC --> FR[FavoritesRepository]
+    MR --> OM[OMDb remote data source]
+    FR --> SP[SharedPreferences local data source]
 ```
 
-**Direction of dependency:** widgets observe view models → view models use repository interfaces → repositories own API/storage. Repositories do not import widget code.
-
-## 2. Suggested project structure
+## 2. Project structure
 
 ```text
 lib/
 ├── main.dart
-├── app.dart
-├── core/
-│   ├── theme/app_theme.dart
-│   ├── config/app_config.dart
-│   ├── network/omdb_client.dart
-│   ├── utils/api_exception.dart
-│   └── widgets/{movie_tile,poster_image,empty_state,error_state}.dart
-├── models/
-│   ├── movie_summary.dart
-│   ├── movie_detail.dart
-│   └── movie_search_result.dart
-├── repositories/
-│   ├── movie_repository.dart
-│   └── favorites_repository.dart
-├── viewmodels/
-│   ├── discover_viewmodel.dart
-│   ├── search_viewmodel.dart
-│   ├── movie_detail_viewmodel.dart
-│   └── favorites_viewmodel.dart
+├── app/                  # app root, dependency injection, routes, theme
+├── core/                 # config, Dio client, errors, shared widgets
 └── features/
-    ├── shell/main_shell.dart
-    ├── discover/discover_screen.dart
-    ├── search/search_screen.dart
-    ├── detail/movie_detail_screen.dart
-    └── saved/saved_screen.dart
-
-test/
-├── models/movie_parsing_test.dart
-├── viewmodels/search_viewmodel_test.dart
-└── repositories/favorites_repository_test.dart
+    ├── movies/
+    │   ├── domain/       # entities, repository interfaces, use cases
+    │   └── data/         # models, repository implementations, data sources
+    ├── discover/
+    ├── detail/
+    ├── search/
+    ├── saved/
+    └── shell/            # screen presentation and tab navigation
 ```
 
-File names and exact state-management package are adaptable. Prefer Flutter built-in `ChangeNotifier` + `ListenableBuilder` (or `AnimatedBuilder`) and constructor injection. A shared FavoritesViewModel instance must be passed to every screen needing favorite state.
+A single `FavoritesViewModel` supplies favorite state across all screens. The router creates a `MovieDetailViewModel` for each detail route.
 
 ## 3. Key models
 
@@ -152,7 +132,7 @@ This sample shows the storage shape, not an assertion about the API's current po
 
 ## 7. Navigation strategy
 
-Use a `Scaffold` shell with `IndexedStack` for Discover, Search, Saved; push detail with Navigator to keep underlying tab state. Detail accepts only an IMDb ID and optionally the summary for an instant preview. Use `Hero` animations only when tags are unique across routes and no runtime assertion occurs.
+The main shell uses an `IndexedStack` for Discover, Search, and Saved. GoRouter pushes the detail route with an IMDb ID and optional summary and Hero tag.
 
 ## 8. Tradeoffs / ADR
 
@@ -167,7 +147,7 @@ Use a `Scaffold` shell with `IndexedStack` for Discover, Search, Saved; push det
 
 ## 9. Architecture acceptance
 
-- [ ] UI contains no raw `http.get` calls or SharedPreferences mutations.
+- [ ] UI delegates network and storage operations to the data layer.
 - [ ] Repositories are testable with fake client/storage adapters.
 - [ ] Search can ignore older responses.
 - [ ] Favorites change in all tabs from one shared source of truth.
