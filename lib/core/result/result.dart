@@ -1,4 +1,4 @@
-import 'package:reelora/core/error/failures.dart';
+import 'package:movie_muse/core/error/failures.dart';
 
 sealed class Result<T> {
   const Result();

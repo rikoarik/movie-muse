@@ -47,7 +47,6 @@ Flutter widgets → ViewModels (`ChangeNotifier`) → Movie/Favorites repositori
 - [TASKS.md](TASKS.md) — four-hour work plan
 - [TEST_PLAN.md](TEST_PLAN.md) — automated/manual scenarios
 - [DECISIONS.md](DECISIONS.md) — decisions and unresolved points
-- [AI_IMPLEMENTATION_PROMPT.md](AI_IMPLEMENTATION_PROMPT.md) — implementation handoff prompt
 
 ## Required submission
 

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:reelora/core/result/result.dart';
+import 'package:movie_muse/core/result/result.dart';
 
 abstract interface class UseCase<T, Params> {
   Future<Result<T>> call(Params params);

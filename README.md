@@ -1,42 +1,59 @@
 # Reelora
 
-Flutter application structured with **MVVM** and **Clean Architecture** (feature-first).
+Flutter movie-discovery application built with **MVVM + Clean Architecture** and the **Soft Editorial Cinema** design system.
 
-## Architecture Overview
+## Features
+
+- **Discover** — Curated featured film hero, quick keyword chips (`Batman`, `Star Wars`, `Love`, `Comedy`), pull-to-refresh, and infinite-scroll OMDb listing.
+- **Movie Details** — Atmospheric peach/lavender backdrop with overlapping 2:3 poster, floating IMDb rating badge, readable story card, Director/Released bento cards, and starring cast chips. Safe `N/A` normalization across every field.
+- **Live Search** — 450 ms debounced title search (`min 2` chars) with monotonic request-generation guarding so out-of-order stale responses never overwrite newer results.
+- **Saved Watchlist** — Local persistent favorites (`SharedPreferences` under `favorite_movies_v1`), newest-saved first, available offline, and synchronized across all tabs and Detail.
+
+## Architecture
 
 ```text
 lib/
-├── main.dart                     # Entry point & DI bootstrap
+├── main.dart                         # App bootstrap & Favorites preload
 ├── app/
-│   ├── app.dart                  # Root MaterialApp.router
-│   ├── di/injection.dart         # Dependency injection (get_it)
-│   ├── router/                   # Navigation (go_router)
-│   └── theme/                    # App colors & Material 3 themes
+│   ├── app.dart                      # MultiProvider + MaterialApp.router
+│   ├── di/injection.dart             # get_it container
+│   ├── router/                       # go_router routes (Shell + Detail)
+│   └── theme/                        # Tokens, spacing, Plus Jakarta Sans scale
 ├── core/
-│   ├── config/env_config.dart    # Environment & API configuration
-│   ├── error/                    # Exceptions (data) & Failures (domain)
-│   ├── network/api_client.dart   # Dio HTTP wrapper
-│   ├── result/result.dart        # Sealed Result<T> (Success / ErrorResult)
-│   ├── usecase/usecase.dart      # Base UseCase<T, Params>
-│   └── viewmodel/                # BaseViewModel & ViewState
+│   ├── config/env_config.dart        # OMDb config via --dart-define
+│   ├── error/                        # Sealed AppException & Failure hierarchy
+│   ├── network/api_client.dart       # Dio HTTPS wrapper (no key logging)
+│   ├── result/result.dart            # Sealed Result<T>
+│   ├── usecase/usecase.dart          # Base UseCase<T, Params>
+│   ├── viewmodel/base_view_model.dart
+│   └── widgets/                      # Reusable editorial UI primitives
 └── features/
-    └── home/                     # Example feature
-        ├── data/                 # DataSources, Models, Repository Impl
-        ├── domain/               # Entities, Repository Interface, UseCases
-        └── presentation/         # ViewModels (ChangeNotifier), Views, Widgets
+    ├── movies/                       # Shared Movie & Favorites domain + data
+    ├── shell/                        # IndexedStack bottom-navigation shell
+    ├── discover/                     # DiscoverViewModel, Hero, Chips, View
+    ├── detail/                       # MovieDetailViewModel, PosterStage, Bento
+    ├── search/                       # Debounced SearchViewModel, SearchPill, View
+    └── saved/                        # Shared FavoritesViewModel & SavedView
 ```
-
-## Layer Rules
-
-- **Domain** (`domain/`): Pure Dart business rules (Entities, Repository contracts, UseCases). No Flutter UI or HTTP dependencies.
-- **Data** (`data/`): Implements Domain repositories, maps DTO/Models to Entities, and catches DataSource exceptions into `Failure`.
-- **Presentation** (`presentation/`): MVVM using `BaseViewModel` (`ChangeNotifier`) + `Provider`. Views only render state and forward user actions to the ViewModel.
 
 ## Getting Started
 
-```bash
-flutter pub get
-flutter analyze
-flutter test
-flutter run
-```
+1. Obtain an API key from [omdbapi.com](https://www.omdbapi.com/).
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+3. Run the app:
+   ```bash
+   flutter run --dart-define=OMDB_API_KEY=YOUR_KEY
+   ```
+4. Verify formatting, static analysis, and automated tests:
+   ```bash
+   dart format --output=none --set-exit-if-changed lib test
+   flutter analyze
+   flutter test
+   ```
+5. Build release Android APK:
+   ```bash
+   flutter build apk --release --dart-define=OMDB_API_KEY=YOUR_KEY
+   ```

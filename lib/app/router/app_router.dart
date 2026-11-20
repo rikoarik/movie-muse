@@ -1,21 +1,40 @@
 import 'package:go_router/go_router.dart';
+import 'package:movie_muse/app/di/injection.dart';
+import 'package:movie_muse/app/router/app_routes.dart';
+import 'package:movie_muse/features/detail/presentation/viewmodels/movie_detail_viewmodel.dart';
+import 'package:movie_muse/features/detail/presentation/views/movie_detail_view.dart';
+import 'package:movie_muse/features/movies/domain/usecases/get_movie_detail_usecase.dart';
+import 'package:movie_muse/features/shell/presentation/views/main_shell_view.dart';
 import 'package:provider/provider.dart';
-import 'package:reelora/app/di/injection.dart';
-import 'package:reelora/app/router/app_routes.dart';
-import 'package:reelora/features/home/presentation/viewmodels/home_viewmodel.dart';
-import 'package:reelora/features/home/presentation/views/home_view.dart';
 
-final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.home,
-  routes: [
-    GoRoute(
-      path: AppRoutes.home,
-      builder: (context, state) {
-        return ChangeNotifierProvider<HomeViewModel>(
-          create: (_) => getIt<HomeViewModel>(),
-          child: const HomeView(),
-        );
-      },
-    ),
-  ],
-);
+GoRouter createAppRouter() {
+  return GoRouter(
+    initialLocation: AppRoutes.shell,
+    routes: [
+      GoRoute(
+        path: AppRoutes.shell,
+        builder: (context, state) => const MainShellView(),
+      ),
+      GoRoute(
+        path: AppRoutes.movieDetailPattern,
+        builder: (context, state) {
+          final imdbId = Uri.decodeComponent(
+            state.pathParameters['imdbId'] ?? '',
+          );
+          final extra = state.extra is MovieDetailRouteExtra
+              ? state.extra! as MovieDetailRouteExtra
+              : null;
+
+          return ChangeNotifierProvider<MovieDetailViewModel>(
+            create: (_) => MovieDetailViewModel(
+              imdbId: imdbId,
+              initialSummary: extra?.summary,
+              getMovieDetailUseCase: getIt<GetMovieDetailUseCase>(),
+            ),
+            child: MovieDetailView(heroTag: extra?.heroTag),
+          );
+        },
+      ),
+    ],
+  );
+}

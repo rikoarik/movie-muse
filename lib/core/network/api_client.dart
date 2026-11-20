@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:reelora/core/config/env_config.dart';
-import 'package:reelora/core/error/exceptions.dart';
+import 'package:movie_muse/core/config/env_config.dart';
+import 'package:movie_muse/core/error/exceptions.dart';
 
 class ApiClient {
   ApiClient({Dio? dio})
@@ -8,13 +8,10 @@ class ApiClient {
           dio ??
           Dio(
             BaseOptions(
-              baseUrl: EnvConfig.apiBaseUrl,
+              baseUrl: EnvConfig.omdbBaseUrl,
               connectTimeout: EnvConfig.connectTimeout,
               receiveTimeout: EnvConfig.receiveTimeout,
-              headers: const {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-              },
+              headers: const {'Accept': 'application/json'},
             ),
           );
 
@@ -24,25 +21,14 @@ class ApiClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
+    CancelToken? cancelToken,
   }) async {
     return _guard(
-      () =>
-          _dio.get<T>(path, queryParameters: queryParameters, options: options),
-    );
-  }
-
-  Future<Response<T>> post<T>(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async {
-    return _guard(
-      () => _dio.post<T>(
+      () => _dio.get<T>(
         path,
-        data: data,
         queryParameters: queryParameters,
         options: options,
+        cancelToken: cancelToken,
       ),
     );
   }
@@ -51,15 +37,19 @@ class ApiClient {
     try {
       return await request();
     } on DioException catch (error) {
+      final statusCode = error.response?.statusCode;
+      if (statusCode == 401 || statusCode == 403) {
+        throw const InvalidApiKeyException();
+      }
       if (error.type == DioExceptionType.connectionError ||
           error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.receiveTimeout) {
+          error.type == DioExceptionType.receiveTimeout ||
+          error.type == DioExceptionType.sendTimeout ||
+          (statusCode != null && statusCode >= 500)) {
         throw const NetworkException();
       }
-      throw ServerException(
-        error.message ?? 'Request failed.',
-        statusCode: error.response?.statusCode,
-      );
+      // Do not echo error.message directly if it contains URL/apikey query params.
+      throw ServerException('OMDb request failed.', statusCode: statusCode);
     }
   }
 }

@@ -1,11 +1,11 @@
 {
-    "name": "reelora",
-    "short_name": "reelora",
+    "name": "Movie Muse",
+    "short_name": "Movie Muse",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FAF8F6",
+    "theme_color": "#FF9C62",
+    "description": "Soft editorial cinema movie discovery app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
