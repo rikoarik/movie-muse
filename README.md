@@ -43,6 +43,16 @@ Alur: `View` → `ViewModel` (ChangeNotifier) → `UseCase` → `Repository` →
 
 ## Tampilan Aplikasi
 
+### Desain UI (Figma)
+
+Desain layar utama: Discover, Detail Film, Pencarian, dan Favorit.
+
+![Core screens](docs/design/core-screens.png)
+
+Desain state: pencarian kosong, loading, error jaringan, dan favorit kosong.
+
+![Functional states](docs/design/functional-states.png)
+
 Screenshot dari aplikasi yang berjalan akan ditambahkan di bagian ini.
 
 ## Download APK
